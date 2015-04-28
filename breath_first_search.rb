@@ -28,7 +28,7 @@ class BreathFirstSearch
 
     while queue.any?
       current_node = queue.shift
-      current_node.adjacents.each do |adjacent_node|
+      @graph.adjacents(current_node).each do |adjacent_node|
         next if @visited.include?(adjacent_node)
         queue << adjacent_node
         @visited << adjacent_node

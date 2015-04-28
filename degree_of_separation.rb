@@ -1,5 +1,6 @@
 require './graph'
 require './node'
+require './edge'
 require './breath_first_search'
 require 'open-uri'	
 require 'json'
@@ -61,8 +62,15 @@ class DegreeOfSeparation
 		src_name = src_name.downcase.gsub(" ", "-")
 		dest_name = dest_name.downcase.gsub(" ", "-")
 		
-		src_node = create_node_and_populate_graph(src_name)
-		dest_node = create_node_and_populate_graph(dest_name)
+		src_node = @graph.get_node(src_name)
+		if src_node.nil?
+			src_node = create_node_and_populate_graph(src_name)
+		end
+
+		dest_node = @graph.get_node(dest_name)
+		if dest_node.nil?
+			dest_node = create_node_and_populate_graph(dest_name)
+		end
 		path = breath_first_search(src_node, dest_node)
 		
 		write_to_yaml
