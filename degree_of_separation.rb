@@ -3,11 +3,22 @@ require './node'
 require './breath_first_search'
 require 'open-uri'	
 require 'json'
+require 'yaml'
 require 'openssl'
 
 class DegreeOfSeparation
 	def initialize
-		@graph = Graph.new
+		@graph = YAML::load(read_yaml) || Graph.new
+	end
+
+	def read_yaml
+		File.exist?('./graph.yaml') ? File.open('./graph.yaml', "r").read : ""
+	end
+
+	def write_to_yaml
+		File.open('./graph.yaml', 'w+') do |f|
+			f.write(YAML::dump(@graph))
+		end
 	end
 
 	def breath_first_search(src_node, dest_node)
@@ -32,6 +43,7 @@ class DegreeOfSeparation
 				person_node = @graph.get_node(cast_person['url'])
 				if !person_node
 					person_node = Node.new(cast_person['url'])
+					@graph.add_node(person_node)
 				end
 				@graph.add_edge(node, person_node)
 			end
@@ -40,6 +52,7 @@ class DegreeOfSeparation
 
 	def create_node_and_populate_graph(name)
 		node = Node.new(name)
+		@graph.add_node(node)
 		populate_graph(node)
 		node
 	end
@@ -52,6 +65,8 @@ class DegreeOfSeparation
 		dest_node = create_node_and_populate_graph(dest_name)
 		path = breath_first_search(src_node, dest_node)
 		
+		write_to_yaml
+
 		puts "Path:"
 		puts path
 		puts "Degree of separation :" + (path.nil? ? "None" : (path.size - 1).to_s)
