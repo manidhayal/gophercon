@@ -49,6 +49,7 @@ class DegreeOfSeparation
 				@graph.add_edge(node, person_node)
 			end
 		end
+		node.populated = true
 	end
 
 	def get_persons_based_on_level(node, level)
@@ -71,6 +72,7 @@ class DegreeOfSeparation
 
 	def populate_graph_for_given_collections(connections)
 		connections.each do |n|
+			next if n.populated
 			populate_graph(n)
 		end
 	end
@@ -90,6 +92,8 @@ class DegreeOfSeparation
 			dest_node = create_node_and_populate_graph(dest_name)
 		end
 
+		populate_graph(src_node) if !src_node.populated
+		populate_graph(dest_node) if !dest_node.populated
 		path = breath_first_search(src_node, dest_node)
 		
 		# after check on first (separation of 2) level we do another two level of check

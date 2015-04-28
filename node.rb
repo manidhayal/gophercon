@@ -1,5 +1,5 @@
 class Node
-  attr_accessor :name, :adjacents
+  attr_accessor :name, :populated
 
   def initialize(name)
     @name = name
