@@ -79,8 +79,7 @@ class DegreeOfSeparation
 
 	# Have considered Six degrees of separation theory to limit number of aggregation of data
 	def distance_between_two_nodes(src_name, dest_name)
-		src_name = src_name.downcase.gsub(" ", "-")
-		dest_name = dest_name.downcase.gsub(" ", "-")
+		path = nil
 
 		src_node = @graph.get_node(src_name)
 		if src_node.nil?
@@ -90,11 +89,15 @@ class DegreeOfSeparation
 		dest_node = @graph.get_node(dest_name)
 		if dest_node.nil?
 			dest_node = create_node_and_populate_graph(dest_name)
+		else
+			path = breath_first_search(src_node, dest_node)
 		end
 
-		populate_graph(src_node) if !src_node.populated
-		populate_graph(dest_node) if !dest_node.populated
-		path = breath_first_search(src_node, dest_node)
+		if path.empty?
+			populate_graph(src_node) if !src_node.populated
+			populate_graph(dest_node) if !dest_node.populated
+			path = breath_first_search(src_node, dest_node)
+		end
 		
 		# after check on first (separation of 2) level we do another two level of check
 		if path.empty?
