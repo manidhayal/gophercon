@@ -119,4 +119,22 @@ class DegreeOfSeparation
 	end
 end
 
+dos = DegreeOfSeparation.new
+src_name = ARGV[0]
+dst_name = ARGV[1]
+
+begin
+	dos.get_data_from_movie_buff(src_name)
+rescue
+	puts "Error retrieving #{src_name}"
+	exit 0
+end
+
+begin
+	dos.get_data_from_movie_buff(dst_name)
+rescue
+	puts "Error retrieving #{dst_name}"
+	exit 0
+end
+
 DegreeOfSeparation.new().distance_between_two_nodes(ARGV[0], ARGV[1])
