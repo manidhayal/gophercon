@@ -1,15 +1,16 @@
-# Degree of seapration Usage
-# Have used Ruby language to implement this code and BFS algorithm
-# Have considered 6 degree of separation theory
+### Degree of seapration Usage
+### Have used Ruby language to implement this code and BFS algorithm
+### Have considered 6 degree of separation theory
 
-#Usage
-ruby degree_of_separation.rb amitabh-bachchan rajinikanth
+####Usage
+
+1.ruby degree_of_separation.rb amitabh-bachchan rajinikanth
 Path:
 amitabh-bachchan
 rajinikanth
 Degree of separation :1
 
-ruby degree_of_separation.rb amitabh-bachchan robert-de-niro
+2.ruby degree_of_separation.rb amitabh-bachchan robert-de-niro
 Path:
 amitabh-bachchan
 anupam-kher
