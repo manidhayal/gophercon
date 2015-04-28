@@ -51,6 +51,17 @@ class DegreeOfSeparation
 		end
 	end
 
+	def get_persons_based_on_level(node, level)
+		connections = [node]
+		(1..level).each do |level|
+			connections =
+			connections.collect do |n|
+				(@graph.adjacents(n) - [node])
+			end.flatten
+		end
+		connections
+	end
+
 	def create_node_and_populate_graph(name)
 		node = Node.new(name)
 		@graph.add_node(node)
@@ -58,10 +69,17 @@ class DegreeOfSeparation
 		node
 	end
 
+	def populate_graph_for_given_collections(connections)
+		connections.each do |n|
+			populate_graph(n)
+		end
+	end
+
+	# Have considered Six degrees of separation theory to limit number of aggregation of data
 	def distance_between_two_nodes(src_name, dest_name)
 		src_name = src_name.downcase.gsub(" ", "-")
 		dest_name = dest_name.downcase.gsub(" ", "-")
-		
+
 		src_node = @graph.get_node(src_name)
 		if src_node.nil?
 			src_node = create_node_and_populate_graph(src_name)
@@ -71,8 +89,21 @@ class DegreeOfSeparation
 		if dest_node.nil?
 			dest_node = create_node_and_populate_graph(dest_name)
 		end
+
 		path = breath_first_search(src_node, dest_node)
 		
+		# after check on first (separation of 2) level we do another two level of check
+		if path.empty?
+			(1..2).each do |level|
+				src_connections = get_persons_based_on_level(src_node, level)
+				populate_graph_for_given_collections(src_connections)
+				dst_connections = get_persons_based_on_level(dest_node, level)
+				populate_graph_for_given_collections(dst_connections)
+				path = breath_first_search(src_node, dest_node)
+				break if path.any?
+			end
+		end
+
 		write_to_yaml
 
 		puts "Path:"
